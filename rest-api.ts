@@ -11,12 +11,12 @@ export default abstract class RestApi {
 
     public constructor(apiPrefix: string = "") {
         this._apiPrefix = apiPrefix;
-        this._controllers = this.controllers();
     }
 
     public abstract controllers(): ApiController[];
 
     public configureRouting(): RequestHandler {
+        this._controllers = this.controllers();
         return async (request: Request, response: Response, next: () => {}) => {
             try {
                 if (!request.url.startsWith(this._apiPrefix)) next();
