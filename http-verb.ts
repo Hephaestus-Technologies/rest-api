@@ -1,4 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
 export enum HttpVerb {
     HTTP_GET,
     HTTP_POST,

@@ -3,7 +3,7 @@ import RouteTable from "./route-table";
 import RouteConfig from "./route-config";
 import {Request, Response} from "express";
 import {HttpVerb} from "./http-verb";
-import QueryParams from "./queryParams";
+import QueryParams from "./query-params";
 import {StatusCode} from "./status-code";
 import NotFoundError from "./not-found-error";
 

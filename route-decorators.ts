@@ -1,19 +1,12 @@
 import {HttpVerb} from "./http-verb";
 import RouteTable from "./route-table";
 import RouteConfig from "./route-config";
-import {dQuote, dString, identifier, integer, sQuote, sString} from "./url-grammar";
+import {dString, identifier, integer, sString} from "./url-grammar";
 
-// noinspection JSUnusedGlobalSymbols
-export const routePrefix = (routePrefix: string) => (Class) => {
-    const routeTable = Class.prototype.__routeTable__ as RouteTable;
-    routeTable.setPrefix(prefixRegexOf(routePrefix));
-};
-
-// noinspection JSUnusedGlobalSymbols
-export const GET = (route: string) => (proto: any, propertyKey: string) => {
+const addConfig = (verb: HttpVerb) => (route: string) => (proto: any, propertyKey: string): void => {
     proto.__routeTable__ = proto.__routeTable__ || new RouteTable()
     const table = proto.__routeTable__ as RouteTable;
-    const config = configOf(HttpVerb.HTTP_GET, route, propertyKey);
+    const config = configOf(verb, route, propertyKey);
     table.add(config);
 };
 
@@ -91,3 +84,27 @@ const casesOfString = (str: string): string => {
     const camel = str[0].toUpperCase() + str.substr(1).toLowerCase();
     return `(?:${lower})|(?:${upper})|(?:${camel})`
 };
+
+// noinspection JSUnusedGlobalSymbols
+export const routePrefix = (routePrefix: string) => (Class): void => {
+    const routeTable = Class.prototype.__routeTable__ as RouteTable;
+    routeTable.setPrefix(prefixRegexOf(routePrefix));
+};
+
+// noinspection JSUnusedGlobalSymbols
+export const HEAD = addConfig(HttpVerb.HTTP_HEAD);
+
+// noinspection JSUnusedGlobalSymbols
+export const GET = addConfig(HttpVerb.HTTP_GET);
+
+// noinspection JSUnusedGlobalSymbols
+export const POST = addConfig(HttpVerb.HTTP_POST);
+
+// noinspection JSUnusedGlobalSymbols
+export const PUT = addConfig(HttpVerb.HTTP_PUT);
+
+// noinspection JSUnusedGlobalSymbols
+export const PATCH = addConfig(HttpVerb.HTTP_PATCH);
+
+// noinspection JSUnusedGlobalSymbols
+export const DELETE = addConfig(HttpVerb.HTTP_DELETE);
