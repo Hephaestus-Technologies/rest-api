@@ -1,9 +1,9 @@
 // noinspection JSUnusedGlobalSymbols
 export default class QueryParams {
 
-    private readonly _params: { [p: string]: string };
+    private readonly _params: {[p: string]: string};
 
-    constructor(params: any) {
+    constructor(params: {[p: string]: string}) {
         this._params = params;
     }
 
