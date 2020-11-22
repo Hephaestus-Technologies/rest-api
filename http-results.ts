@@ -7,7 +7,7 @@ export const Ok = (body = null): IHttpResult => {
         statusCode: StatusCode.OK,
         body
     };
-}
+};
 
 // noinspection JSUnusedGlobalSymbols
 export const NotFound = (): IHttpResult => {
@@ -15,7 +15,7 @@ export const NotFound = (): IHttpResult => {
         statusCode: StatusCode.NOT_FOUND,
         body: "Not Found"
     };
-}
+};
 
 // noinspection JSUnusedGlobalSymbols
 export const InternalServerError = (): IHttpResult => {
@@ -23,12 +23,20 @@ export const InternalServerError = (): IHttpResult => {
         statusCode: StatusCode.INTERNAL_SERVER_ERROR,
         body: "Internal Server Error"
     };
-}
+};
 
 // noinspection JSUnusedGlobalSymbols
 export const BadRequest = (): IHttpResult => {
     return {
         statusCode: StatusCode.BAD_REQUEST,
         body: "Bad Request"
-    }
-}
+    };
+};
+
+// noinspection JSUnusedGlobalSymbols
+export const Redirect = (location: string): IHttpResult => {
+    return {
+        statusCode: StatusCode.REDIRECT,
+        body: location
+    };
+};

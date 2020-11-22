@@ -27,7 +27,10 @@ export default class ApiController {
         const config = routeTable.configFor(request.url);
         if (!config) throw new NotFoundError();
         const result = await this._execute(request, config, getUserId);
-        response.status(result.statusCode).send(result.body);
+        if (result.statusCode === StatusCode.REDIRECT)
+            response.redirect(result.body);
+        else
+            response.status(result.statusCode).send(result.body);
     }
 
     private _execute(request: Request, config: RouteConfig, getUserId: GetUserId): Promise<IHttpResult> {
