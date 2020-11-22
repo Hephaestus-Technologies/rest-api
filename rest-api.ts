@@ -6,23 +6,29 @@ import {StatusCode} from "./status-code";
 // noinspection JSUnusedGlobalSymbols
 export default abstract class RestApi {
 
-    private _apiPrefix: string;
     private _controllers: ApiController[];
 
-    public constructor(apiPrefix: string = "") {
-        this._apiPrefix = apiPrefix;
+    public constructor() {
+        this.userId = this.userId.bind(this);
     }
 
-    public abstract controllers(): ApiController[];
+    protected apiPrefix(): string {
+        return "";
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    protected userId(request: Request): Promise<string> {
+        return Promise.resolve("");
+    };
+
+    protected abstract controllers(): ApiController[];
 
     public configureRouting(): RequestHandler {
         this._controllers = this.controllers();
         return async (request: Request, response: Response, next: () => {}) => {
             try {
-                if (!request.url.startsWith(this._apiPrefix)) next();
-                request.url = request.url.slice(this._apiPrefix.length);
-                const controller = this._controllerFor(request.url);
-                return await controller.route(request, response);
+                if (!request.url.startsWith(this.apiPrefix())) return next();
+                await this._handleRequest(request, response);
             } catch (e) {
                 if (e instanceof NotFoundError)
                     response.sendStatus(StatusCode.NOT_FOUND);
@@ -32,7 +38,13 @@ export default abstract class RestApi {
         };
     }
 
-    public _controllerFor(url: string): ApiController {
+    private _handleRequest(request: Request, response: Response): Promise<void> {
+        request.url = request.url.slice(this.apiPrefix().length);
+        const controller = this._controllerFor(request.url);
+        return controller.route(request, response, this.userId);
+    }
+
+    private _controllerFor(url: string): ApiController {
         const apiController = this._controllers.find(c => c.matches(url));
         if (!apiController) throw new NotFoundError();
         return apiController;

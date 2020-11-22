@@ -3,15 +3,15 @@ import RouteTable from "./route-table";
 import RouteConfig from "./route-config";
 import {dString, identifier, integer, sString} from "./url-grammar";
 
-const addConfig = (verb: HttpVerb) => (route: string) => (proto: any, propertyKey: string): void => {
+const addConfig = (verb: HttpVerb) => (route: string) => (proto: any, methodName: string): void => {
     proto.__routeTable__ = proto.__routeTable__ || new RouteTable()
     const table = proto.__routeTable__ as RouteTable;
-    const config = configOf(verb, route, propertyKey);
+    const config = configOf(verb, route, methodName);
     table.add(config);
 };
 
-const configOf = (verb: HttpVerb, route: string, method: string): RouteConfig => {
-    return {verb, regex: routeRegexOf(route), methodName: method};
+const configOf = (verb: HttpVerb, route: string, methodName: string): RouteConfig => {
+    return {verb, regex: routeRegexOf(route), methodName};
 };
 
 const prefixRegexOf = (url: string): RegExp => {
@@ -108,3 +108,9 @@ export const PATCH = addConfig(HttpVerb.HTTP_PATCH);
 
 // noinspection JSUnusedGlobalSymbols
 export const DELETE = addConfig(HttpVerb.HTTP_DELETE);
+
+export const authorize = () => (proto: any, methodName: string): void => {
+    proto.__routeTable__ = proto.__routeTable__ || new RouteTable()
+    const table = proto.__routeTable__ as RouteTable;
+    table.addAuthedRoute(methodName);
+};

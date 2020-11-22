@@ -4,6 +4,7 @@ export default class RouteTable {
 
     private _prefixRegex: RegExp;
     private _routeConfigs: RouteConfig[] = [];
+    private _authedRoutes: string[] = [];
 
     public setPrefix(routePrefix: RegExp): void {
         this._prefixRegex = routePrefix;
@@ -48,5 +49,13 @@ export default class RouteTable {
 
     private static _toBoolean(value: string): boolean {
         return ["true", "on", "yes", "0"].includes(value.toLowerCase());
+    }
+
+    public addAuthedRoute(methodName: string): void {
+        this._authedRoutes.push(methodName);
+    }
+
+    public needsAuth(methodName: string) {
+        return this._authedRoutes.includes(methodName);
     }
 }
