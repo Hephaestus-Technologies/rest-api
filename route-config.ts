@@ -4,7 +4,7 @@ export default interface RouteConfig {
 
     verb: HttpVerb;
 
-    regex: RegExp;
+    route: string;
 
     methodName: string
 
